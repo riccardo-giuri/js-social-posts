@@ -55,3 +55,42 @@ const posts = [
         "created": "2021-03-05"
     }
 ];
+
+const postList = [];
+
+createPost(posts);
+
+console.log(postList);
+
+
+function createPost(dataArray) {
+    dataArray.forEach((element) => {
+        const newPost = {};
+
+        newPost.postId = element.id;
+        newPost.authorName = element.author.name;
+        newPost.authorImage = element.author.image;
+
+        newPost.postData = formattingAmericanTime(element.created);
+
+        newPost.postContent = element.content;
+        newPost.postImage = element.media;
+        newPost.postLikes = element.likes;
+
+        postList.push(newPost);
+    });
+}
+
+function formattingItalianTime(timeToConvert) {
+    const timeArray = timeToConvert.split("-");
+    const italianData = `${timeArray[2]}-${timeArray[1]}-${timeArray[0]}`;
+
+    return italianData;
+}
+
+function formattingAmericanTime(timeToConvert) {
+    const timeArray = timeToConvert.split("-");
+    const americanData = `${timeArray[1]}-${timeArray[2]}-${timeArray[0]}`;
+
+    return americanData;
+}
