@@ -60,14 +60,13 @@ const postContainer = document.querySelector("#container");
 
 const postList = [];
 
-createPostObject(posts);
+const likedPost = [];
 
-console.log(postList);
+createPostObjects(posts);
 
-postContainer?.append(createPostElement(postList[0]));
+printAllPost(postList);
 
-
-function createPostObject(dataArray) {
+function createPostObjects(dataArray) {
     dataArray.forEach((element) => {
         const newPost = {};
 
@@ -75,7 +74,7 @@ function createPostObject(dataArray) {
         newPost.authorName = element.author.name;
         newPost.authorImage = element.author.image;
 
-        newPost.postData = formattingAmericanTime(element.created);
+        newPost.postData = formattingItalianTime(element.created);
 
         newPost.postContent = element.content;
         newPost.postImage = element.media;
@@ -87,7 +86,7 @@ function createPostObject(dataArray) {
 
 function formattingItalianTime(timeToConvert) {
     const timeArray = timeToConvert.split("-");
-    const italianData = `${timeArray[2]}-${timeArray[1]}-${timeArray[0]}`;
+    const italianData = `${timeArray[2]}/${timeArray[1]}/${timeArray[0]}`;
 
     return italianData;
 }
@@ -97,6 +96,12 @@ function formattingAmericanTime(timeToConvert) {
     const americanData = `${timeArray[1]}-${timeArray[2]}-${timeArray[0]}`;
 
     return americanData;
+}
+
+function printAllPost(postArray) {
+    postArray.forEach(element => {
+        postContainer?.append(createPostElement(element));
+    });
 }
 
 function createPostElement(elementData) {
@@ -123,9 +128,18 @@ function createPostHeader(elementData) {
     postMetaIcon.classList.add("post-meta__icon");
     postMeta.append(postMetaIcon);
 
+    const iconText = document.createElement("h2");
+    postMetaIcon.append(iconText);
+
     const metaIcon_img = document.createElement("img");
     metaIcon_img.classList.add("profile-pic");
-    metaIcon_img.src = elementData.authorImage;
+
+    if(elementData.authorImage === null) {
+        iconText.textContent = getInitials(elementData.authorName);
+    }
+    else {
+        metaIcon_img.src = elementData.authorImage;
+    }
     postMetaIcon.append(metaIcon_img);
 
     const postMetaData = document.createElement("div");
@@ -157,8 +171,17 @@ function createPostImage(elementData) {
     const postImageDiv = document.createElement("div");
     postImageDiv.classList.add("post__image");
 
+    const iconText = document.createElement("h2");
+    postImageDiv.append(iconText);
+
     const postImg = document.createElement("img");
-    postImg.src = elementData.postImage;
+    if(elementData.postImage === null) {
+        iconText.textContent = getInitials(elementData.post__image);
+    }
+    else {
+        postImg.src = elementData.postImage;
+    }
+
     postImageDiv.append(postImg);
 
     return postImageDiv;
@@ -178,7 +201,9 @@ function createPostFooter(elementData) {
 
     const buttonLink = document.createElement("a");
     buttonLink.classList.add("like-button", "js-like-button");
-    buttonLink.href = "#";
+    buttonLink.href = "#0";
+    buttonLink.setAttribute("postid", elementData.postId.toString());
+    buttonLink.addEventListener("click", likeClick);
     likesButtonDiv.append(buttonLink);
 
     const ButtonLinkIcon = document.createElement("i");
@@ -195,7 +220,7 @@ function createPostFooter(elementData) {
 
     const likes = document.createElement("b");
     likes.classList.add("js-likes-counter");
-    likes.id = "like-counter-1";
+    likes.id = `like-counter-${elementData.postId}`;
     likes.textContent = elementData.postLikes;
 
     likesCounter.innerHTML = "piace a ";
@@ -204,4 +229,42 @@ function createPostFooter(elementData) {
     postLikesDiv.append(likesCounter)
 
     return postFooterDiv;
+}
+
+function likeClick() {
+    if(this.classList.contains("like-button--liked")) {
+        let ID = parseInt(this.getAttribute("postid")) - 1;
+        postList[ID].postLikes--;
+        this.classList.remove("like-button--liked");
+        updateLikes(postList[ID].postLikes, ID);
+
+        const index = likedPost.indexOf(postList[ID]);
+        likedPost.splice(index, 1); 
+        console.log(likedPost);
+    }
+    else {
+        let ID = parseInt(this.getAttribute("postid")) - 1;
+        postList[ID].postLikes++;
+        this.classList.add("like-button--liked");
+        updateLikes(postList[ID].postLikes, ID);
+        likedPost.push(postList[ID]);
+        console.log(likedPost);
+    }
+}
+
+function getInitials(word) {
+    const nameSplitted = word.split(" ");
+    let name = "";
+
+    nameSplitted.forEach(element => {
+        name += element[0];
+    });
+
+    return name;
+}
+
+function updateLikes(likesValue, id) {
+    id++;
+    const likesElement = document.getElementById(`like-counter-${id}`);
+    likesElement.textContent = likesValue;
 }
