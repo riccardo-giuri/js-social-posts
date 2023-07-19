@@ -1,3 +1,6 @@
+/**
+ * @type {object[]}
+ */
 const posts = [
     {
         "id": 1,
@@ -56,16 +59,32 @@ const posts = [
     }
 ];
 
+/**
+ * @type {Element}
+ */
 const postContainer = document.querySelector("#container");
 
+/**
+ * @type {object[]}
+ */
 const postList = [];
 
+/**
+ * @type {object[]}
+ */
 const likedPost = [];
 
+
+//chiamate funzioni
 createPostObjects(posts);
 
 printAllPost(postList);
 
+
+/**
+ * Create All the post objects that will be pushed in the array
+ * @param {object[]} dataArray The Array that contains the datas for creating the posts
+ */
 function createPostObjects(dataArray) {
     dataArray.forEach((element) => {
         const newPost = {};
@@ -84,6 +103,11 @@ function createPostObjects(dataArray) {
     });
 }
 
+/**
+ * Formatting and returns the input date but in italian Time
+ * @param {string} timeToConvert 
+ * @returns {string}
+ */
 function formattingItalianTime(timeToConvert) {
     const timeArray = timeToConvert.split("-");
     const italianData = `${timeArray[2]}/${timeArray[1]}/${timeArray[0]}`;
@@ -91,6 +115,11 @@ function formattingItalianTime(timeToConvert) {
     return italianData;
 }
 
+/**
+ * Formatting and returns the input date but in american Time
+ * @param {string} timeToConvert 
+ * @returns {string}
+ */
 function formattingAmericanTime(timeToConvert) {
     const timeArray = timeToConvert.split("-");
     const americanData = `${timeArray[1]}-${timeArray[2]}-${timeArray[0]}`;
@@ -98,12 +127,21 @@ function formattingAmericanTime(timeToConvert) {
     return americanData;
 }
 
+/**
+ * Printing all the post inside the input array in the HTML
+ * @param {object[]} postArray The Array that contains the post 
+ */
 function printAllPost(postArray) {
     postArray.forEach(element => {
         postContainer?.append(createPostElement(element));
     });
 }
 
+/**
+ * Create and returns a single post element created from the input datas
+ * @param {object} elementData The Object where you take all post the datas
+ * @returns {Element}
+ */
 function createPostElement(elementData) {
     const postElement = document.createElement("div");
     postElement.classList.add("post");
@@ -116,6 +154,11 @@ function createPostElement(elementData) {
     return postElement;
 }
 
+/**
+ * Create and returns the post header element created from the input datas
+ * @param {object} elementData The Object where you take all post the datas
+ * @returns {Element}
+ */
 function createPostHeader(elementData) {
     const postHeader = document.createElement("div");
     postHeader.classList.add("post__header");
@@ -159,6 +202,11 @@ function createPostHeader(elementData) {
     return postHeader;
 }
 
+/**
+ * Create and returns the post Text element created from the input datas
+ * @param {object} elementData The Object where you take all post the datas
+ * @returns {Element}
+ */
 function createPostText(elementData) {
     const postText = document.createElement("div");
     postText.classList.add("post__text");
@@ -167,6 +215,11 @@ function createPostText(elementData) {
     return postText;
 }
 
+/**
+ * Create and returns the post Image element created from the input datas
+ * @param {object} elementData The Object where you take all post the datas
+ * @returns {Element}
+ */
 function createPostImage(elementData) {
     const postImageDiv = document.createElement("div");
     postImageDiv.classList.add("post__image");
@@ -187,6 +240,11 @@ function createPostImage(elementData) {
     return postImageDiv;
 }
 
+/**
+ * Create and returns a the post Footer element created from the input datas
+ * @param {object} elementData The Object where you take all post the datas
+ * @returns {Element}
+ */
 function createPostFooter(elementData) {
     const postFooterDiv = document.createElement("div");
     postFooterDiv.classList.add("post__footer");
@@ -231,6 +289,9 @@ function createPostFooter(elementData) {
     return postFooterDiv;
 }
 
+/**
+ * Function called when the like button is clicked
+ */
 function likeClick() {
     if(this.classList.contains("like-button--liked")) {
         let ID = parseInt(this.getAttribute("postid")) - 1;
@@ -252,6 +313,11 @@ function likeClick() {
     }
 }
 
+/**
+ * Get the Initials of the passing Name
+ * @param {string} word The Word you want the Initials
+ * @returns {string}
+ */
 function getInitials(word) {
     const nameSplitted = word.split(" ");
     let name = "";
@@ -263,6 +329,11 @@ function getInitials(word) {
     return name;
 }
 
+/**
+ * Updates the likes in the HTML
+ * @param {number} likesValue The number of likes that need to be updated
+ * @param {number} id The id Value of the post  
+ */
 function updateLikes(likesValue, id) {
     id++;
     const likesElement = document.getElementById(`like-counter-${id}`);
